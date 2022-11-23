@@ -17,7 +17,6 @@ public class Pinter {
             graphics2D.fillOval(positionX, positionY, width, height);
             graphics2D.drawOval(positionX, positionY, width, height);
 
-
             //Text Node
             graphics2D.setColor(Color.ORANGE);
             Font font = new Font(null, Font.BOLD, 10);
@@ -53,7 +52,7 @@ public class Pinter {
         graphics2D.drawString(String.valueOf(size), xAux, yAux);
     }
 
-    public static void printTheShortestPath(Graphics graphics, int initialPositionX, int initialPositionY, int finalPositionX, int finalPositionY, Color color) {
+    public static void highlightLine(Graphics graphics, int initialPositionX, int initialPositionY, int finalPositionX, int finalPositionY, Color color) {
         Graphics2D graphics2D = (Graphics2D) graphics;
         BasicStroke stroke = new BasicStroke(3);
         graphics2D.setStroke(stroke);

@@ -9,7 +9,7 @@ public class Graph {
     private int matrixAdjacency[][];
     private int coordinatesX[];
     private int coordinatesY[];
-    private String nameNodes[];
+    private String nodesName[];
 
     public Graph() {}
 
@@ -18,20 +18,20 @@ public class Graph {
         this.matrixAdjacency = new int[numberNodes][numberNodes];
         this.coordinatesX = new int[numberNodes];
         this.coordinatesY = new int[numberNodes];
-        this.nameNodes = new String[numberNodes];
+        this.nodesName = new String[numberNodes];
     }
 
 
     public boolean checkIfNameAlreadyExist(String nameNode) {
-        return Arrays.stream(this.nameNodes).filter(name -> nameNode.equalsIgnoreCase(name)).count() >= 1;
+        return Arrays.stream(this.nodesName).filter(name -> nameNode.equalsIgnoreCase(name)).count() >= 1;
     }
 
     public int returnPosition(String nameNode) {
 
         int position = 0;
 
-        for (int i = 0; i < this.nameNodes.length; i++) {
-            if (nameNodes[i].equalsIgnoreCase(nameNode)) {
+        for (int i = 0; i < this.nodesName.length; i++) {
+            if (nodesName[i].equalsIgnoreCase(nameNode)) {
                 position = i;
             }
         }
@@ -43,16 +43,16 @@ public class Graph {
         return matrixCoefficient[node1][node2];
     }
 
-    public void setMatrixCoefficient(int positionX, int positionY, int coefficient) {
-        this.matrixCoefficient[positionX][positionY] = coefficient;
+    public void setMatrixCoefficient(int node1, int node2, int coefficient) {
+        this.matrixCoefficient[node1][node2] = coefficient;
     }
 
-    public int getMatrixAdjacency(int positionX, int positionY) {
-        return matrixAdjacency[positionX][positionY];
+    public int getMatrixAdjacency(int node1, int node2) {
+        return matrixAdjacency[node1][node2];
     }
 
-    public void setMatrixAdjacency(int positionX, int positionY, int adjacency) {
-        this.matrixAdjacency[positionX][positionY] = adjacency;
+    public void setMatrixAdjacency(int node1, int node2, int adjacency) {
+        this.matrixAdjacency[node1][node2] = adjacency;
     }
 
     public int getCoordinatesX(int position) {
@@ -72,10 +72,10 @@ public class Graph {
     }
 
     public String getNameNodes(int position) {
-        return nameNodes[position];
+        return nodesName[position];
     }
 
-    public void setNameNodes(int position, String name) {
-        this.nameNodes[position] = name;
+    public void setNameNodes(int position, String nodeName) {
+        this.nodesName[position] = nodeName;
     }
 }

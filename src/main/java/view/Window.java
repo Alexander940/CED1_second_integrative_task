@@ -5,56 +5,95 @@ import model.Graph;
 import model.Pinter;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Locale;
 
 public class Window {
 
-    private int currentNumberNode = 0;
     private int counterTemp = 0;
-    private int endNode;
-    private int permanentNode;
     private int maxNodes = 0;
     private int position = 0;
-    private int numberClicks = 0;
-    private int nodeSelected1 = 0;
-    private int getNodeSelected2 = 0;
 
     private JButton startButton;
     private JPanel panel1;
     private JLabel numberNodesKey;
     private JTextField numberNodesValue;
-    private JPanel getInformation;
-    private JPanel pinterGraph;
+    private JPanel panelInformation;
+    private JPanel panelGraphManual;
     private JButton routes;
     private JButton dijkstra;
-    private JButton randomGraph;
+    private JPanel panelWelcome;
+    private JButton graphRandom1;
+    private JButton manualGraph;
+    private JButton graphRandom2;
+    private JLabel title;
 
     private Graph graph;
 
     public Window() {
 
+        panelWelcome.setVisible(true);
         routes.setVisible(false);
         dijkstra.setVisible(false);
-        randomGraph.setVisible(false);
+        panelInformation.setVisible(false);
+        panelGraphManual.setVisible(false);
 
+        this.handleEventButtonManualGraph();
+        this.handleEventButtonStart();
+        this.handleEventButtonRoute();
+        this.handleEventButtonDijkstra();
+        this.handleEventPrintNode();
+
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Window");
+        frame.setContentPane(new Window().panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(500, 500));
+        frame.pack();
+        frame.setVisible(true);
+
+    }
+
+    private void handleEventButtonManualGraph() {
+        manualGraph.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelInformation.setVisible(true);
+                panelWelcome.setVisible(false);
+            }
+        });
+    }
+
+    private void handleEventButtonStart() {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Integer numberNodes = Integer.parseInt(numberNodesValue.getText());
+
+                if (numberNodes <= 1) {
+                    JOptionPane.showMessageDialog(null, "The number of nodes must be greater than 1");
+                    return;
+                }
+
                 maxNodes = numberNodes;
                 graph = new Graph(numberNodes);
-                getInformation.setVisible(false);
-                pinterGraph.setVisible(true);
+                panelInformation.setVisible(false);
+                panelGraphManual.setVisible(true);
                 routes.setVisible(true);
                 dijkstra.setVisible(true);
-                randomGraph.setVisible(true);
             }
         });
+    }
 
+    private void handleEventButtonRoute() {
         routes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,11 +103,12 @@ public class Window {
                     return;
                 }
 
-                randomGraph.setEnabled(false);
-                createAdjacency(graph, pinterGraph);
+                createAdjacency(graph, panelGraphManual);
             }
         });
+    }
 
+    private void handleEventButtonDijkstra() {
         dijkstra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,28 +121,25 @@ public class Window {
                         "final node", secondNodeSelected
                 };
 
-                int option = JOptionPane.showConfirmDialog(null, fields, "Enter Adjacency Weight between node", JOptionPane.OK_CANCEL_OPTION);
+                int option = JOptionPane.showConfirmDialog(null, fields, "Enter adjacency weight between node", JOptionPane.OK_CANCEL_OPTION);
 
-                if (option == JOptionPane.OK_OPTION && graph.checkIfNameAlreadyExist(firstNodeSelected.getText()) && graph.checkIfNameAlreadyExist(secondNodeSelected.getText())) {
-                    int positionNode1 = graph.returnPosition(firstNodeSelected.getText());
-                    int positionNode2 = graph.returnPosition(secondNodeSelected.getText());
+                if (option == JOptionPane.CANCEL_OPTION) return;
 
-                    Dijkstra dijkstra = new Dijkstra(graph, maxNodes, positionNode1, positionNode2, firstNodeSelected.getText(), secondNodeSelected.getText());
-                    dijkstra.dijkstra(pinterGraph);
-                } else {
-                    JOptionPane.showMessageDialog(null, "A node that you entered it is invalid or doesn't exist");
+                if (!graph.checkIfNameAlreadyExist(firstNodeSelected.getText()) || !graph.checkIfNameAlreadyExist(secondNodeSelected.getText())) {
+                    JOptionPane.showMessageDialog(null, "Node that you entered it is invalid or doesn't exist");
+                    return;
                 }
+
+                int positionNode1 = graph.returnPosition(firstNodeSelected.getText());
+                int positionNode2 = graph.returnPosition(secondNodeSelected.getText());
+                Dijkstra dijkstra = new Dijkstra(graph, maxNodes, positionNode1, positionNode2, firstNodeSelected.getText(), secondNodeSelected.getText());
+                dijkstra.dijkstra(panelGraphManual);
             }
         });
+    }
 
-        randomGraph.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                routes.setEnabled(false);
-            }
-        });
-
-        pinterGraph.addMouseListener(new MouseAdapter() {
+    private void handleEventPrintNode() {
+        panelGraphManual.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -117,20 +154,12 @@ public class Window {
                     graph.setCoordinatesX(position, positionX);
                     graph.setCoordinatesY(position, positionY);
                     graph.setNameNodes(position, nameNode);
-                    Pinter.printNodeInGraph(pinterGraph.getGraphics(), positionX, positionY, nameNode);
+                    Pinter.printNodeInGraph(panelGraphManual.getGraphics(), positionX, positionY, nameNode);
                     position++;
                 }
 
             }
         });
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Window");
-        frame.setContentPane(new Window().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
     }
 
     private static String assignNameNode(final Graph graph) {
@@ -157,24 +186,31 @@ public class Window {
         JTextField weightAdjacency = new JTextField();
 
         Object[] fields = {
-                "node1", firstNodeSelected,
-                "node2", secondNodeSelected,
+                "from (Node Name)", firstNodeSelected,
+                "to (Node Name)", secondNodeSelected,
                 "weight", weightAdjacency
         };
 
         int option = JOptionPane.showConfirmDialog(null, fields, "Enter Adjacency Weight between node", JOptionPane.OK_CANCEL_OPTION);
 
-        if (option == JOptionPane.OK_OPTION && graph.checkIfNameAlreadyExist(firstNodeSelected.getText()) && graph.checkIfNameAlreadyExist(secondNodeSelected.getText())) {
-            int positionNode1 = graph.returnPosition(firstNodeSelected.getText());
-            int positionNode2 = graph.returnPosition(secondNodeSelected.getText());
+        if (option == JOptionPane.CANCEL_OPTION) return;
 
-            int weight = Integer.parseInt(weightAdjacency.getText());
-            graph.setMatrixCoefficient(positionNode1, positionNode2, weight);
-            graph.setMatrixAdjacency(positionNode1, positionNode2, 1);
-            Pinter.printEdge(pinterGraph.getGraphics(), graph.getCoordinatesX(positionNode1), graph.getCoordinatesY(positionNode1), graph.getCoordinatesX(positionNode2), graph.getCoordinatesY(positionNode2), weight);
-        } else {
-            JOptionPane.showMessageDialog(null, "A node that you entered it is invalid or doesn't exist");
+        if (!graph.checkIfNameAlreadyExist(firstNodeSelected.getText()) || !graph.checkIfNameAlreadyExist(secondNodeSelected.getText())) {
+            JOptionPane.showMessageDialog(null, "A node that you entered is invalid or doesn't exist");
+            return;
         }
+
+        int positionNode1 = graph.returnPosition(firstNodeSelected.getText());
+        int positionNode2 = graph.returnPosition(secondNodeSelected.getText());
+
+        if (graph.getMatrixAdjacency(positionNode1, positionNode2) == 1) {
+            JOptionPane.showMessageDialog(null, "These nodes already have an assigned adjacency between them");
+        }
+
+        int weight = Integer.parseInt(weightAdjacency.getText());
+        graph.setMatrixCoefficient(positionNode1, positionNode2, weight);
+        graph.setMatrixAdjacency(positionNode1, positionNode2, 1);
+        Pinter.printEdge(pinterGraph.getGraphics(), graph.getCoordinatesX(positionNode1), graph.getCoordinatesY(positionNode1), graph.getCoordinatesX(positionNode2), graph.getCoordinatesY(positionNode2), weight);
     }
 
     {
@@ -193,35 +229,71 @@ public class Window {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        getInformation = new JPanel();
-        getInformation.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(getInformation, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panelInformation = new JPanel();
+        panelInformation.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panelInformation, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         numberNodesKey = new JLabel();
         numberNodesKey.setText("Number Nodes: ");
-        getInformation.add(numberNodesKey, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelInformation.add(numberNodesKey, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         startButton = new JButton();
         startButton.setEnabled(true);
         startButton.setHideActionText(false);
         startButton.setText("Start");
-        getInformation.add(startButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelInformation.add(startButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         numberNodesValue = new JTextField();
         numberNodesValue.setText("");
-        getInformation.add(numberNodesValue, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        pinterGraph = new JPanel();
-        pinterGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(pinterGraph, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panelInformation.add(numberNodesValue, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panelGraphManual = new JPanel();
+        panelGraphManual.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panelGraphManual, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         dijkstra = new JButton();
         dijkstra.setText("Calculate Dijkstra");
-        pinterGraph.add(dijkstra, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelGraphManual.add(dijkstra, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        pinterGraph.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        randomGraph = new JButton();
-        randomGraph.setText("Random Graph");
-        pinterGraph.add(randomGraph, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelGraphManual.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         routes = new JButton();
         routes.setText("Create Routes");
-        pinterGraph.add(routes, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelGraphManual.add(routes, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelWelcome = new JPanel();
+        panelWelcome.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panelWelcome, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        graphRandom1 = new JButton();
+        graphRandom1.setText("Random Graph 1");
+        panelWelcome.add(graphRandom1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        manualGraph = new JButton();
+        manualGraph.setText("Manual Graph");
+        panelWelcome.add(manualGraph, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        graphRandom2 = new JButton();
+        graphRandom2.setText("Random Graph 2");
+        panelWelcome.add(graphRandom2, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        title = new JLabel();
+        Font titleFont = this.$$$getFont$$$("Arial Black", Font.BOLD, 26, title.getFont());
+        if (titleFont != null) title.setFont(titleFont);
+        title.setText("!Welcome to the train station¡");
+        panelWelcome.add(title, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**
