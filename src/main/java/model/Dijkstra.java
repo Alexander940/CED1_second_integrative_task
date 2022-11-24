@@ -46,7 +46,7 @@ public class Dijkstra {
                         if ((subAccumulated <= nodes[j].getAccumulator() && nodes[j].wasVisited() && !nodes[j].isTag()) || !nodes[j].wasVisited()) {
                             nodes[j].setAccumulator(subAccumulated);
                             nodes[j].setWasVisited(true);
-                            nodes[j].setName(graph.getNameNodes(j));
+                            nodes[j].setName(graph.getNameNode(j));
                             nodes[j].setPredecessor(nodes[positionPermanentNode]);
                         }
                     }
@@ -64,7 +64,7 @@ public class Dijkstra {
         for(int i = 0; i < numberMaxNodes; i++) {
             if(nodes[i].wasVisited() && !nodes[i].isTag() && nodes[i].getAccumulator() <= auxAccumulated) {
                 positionPermanentNode = i;
-                namePermanentNode = graph.getNameNodes(i);
+                namePermanentNode = graph.getNameNode(i);
                 auxAccumulated = nodes[i].getAccumulator();
             }
         }

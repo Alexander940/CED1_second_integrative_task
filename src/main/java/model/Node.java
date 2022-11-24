@@ -16,6 +16,14 @@ public class Node {
         this.isTag = false;
     }
 
+    public Node(String name) {
+        this.name = name;
+        this.wasVisited = false;
+        this.accumulator = 0;
+        this.predecessor = null;
+        this.isTag = false;
+    }
+
     public String getName() {
         return name;
     }

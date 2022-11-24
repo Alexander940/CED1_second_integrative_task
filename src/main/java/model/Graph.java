@@ -9,7 +9,7 @@ public class Graph {
     private int matrixAdjacency[][];
     private int coordinatesX[];
     private int coordinatesY[];
-    private String nodesName[];
+    private Node nodesName[];
 
     public Graph() {}
 
@@ -18,25 +18,23 @@ public class Graph {
         this.matrixAdjacency = new int[numberNodes][numberNodes];
         this.coordinatesX = new int[numberNodes];
         this.coordinatesY = new int[numberNodes];
-        this.nodesName = new String[numberNodes];
+        this.nodesName = new Node[numberNodes];
     }
 
 
     public boolean checkIfNameAlreadyExist(String nameNode) {
-        return Arrays.stream(this.nodesName).filter(name -> nameNode.equalsIgnoreCase(name)).count() >= 1;
+        System.out.println("nodesName"+nodesName);
+        return Arrays.stream(this.nodesName).filter(name -> name != null && name.getName() != null && nameNode.equalsIgnoreCase(name.getName())).count() >= 1;
     }
 
     public int returnPosition(String nameNode) {
-
-        int position = 0;
-
         for (int i = 0; i < this.nodesName.length; i++) {
-            if (nodesName[i].equalsIgnoreCase(nameNode)) {
-                position = i;
+            if (nodesName[i].getName().equalsIgnoreCase(nameNode)) {
+                return i;
             }
         }
 
-        return position;
+        return 0;
     }
 
     public int getMatrixCoefficient(int node1, int node2) {
@@ -71,11 +69,16 @@ public class Graph {
         this.coordinatesY[position] = coordinateY;
     }
 
-    public String getNameNodes(int position) {
-        return nodesName[position];
+    public String getNameNode(int position) {
+        return nodesName[position].getName();
     }
 
     public void setNameNodes(int position, String nodeName) {
-        this.nodesName[position] = nodeName;
+        Node node = new Node(nodeName);
+        this.nodesName[position] = node;
+    }
+
+    public Node [] getNodes(){
+        return nodesName;
     }
 }
