@@ -10,6 +10,7 @@ public class Graph {
     private int coordinatesX[];
     private int coordinatesY[];
     private Node nodesName[];
+    private int numberNodes;
 
     public Graph() {}
 
@@ -19,11 +20,11 @@ public class Graph {
         this.coordinatesX = new int[numberNodes];
         this.coordinatesY = new int[numberNodes];
         this.nodesName = new Node[numberNodes];
+        this.numberNodes = numberNodes;
     }
 
 
     public boolean checkIfNameAlreadyExist(String nameNode) {
-        System.out.println("nodesName"+nodesName);
         return Arrays.stream(this.nodesName).filter(name -> name != null && name.getName() != null && nameNode.equalsIgnoreCase(name.getName())).count() >= 1;
     }
 
@@ -33,7 +34,6 @@ public class Graph {
                 return i;
             }
         }
-
         return 0;
     }
 
@@ -80,5 +80,9 @@ public class Graph {
 
     public Node [] getNodes(){
         return nodesName;
+    }
+
+    public int getNumberNodes() {
+        return numberNodes;
     }
 }

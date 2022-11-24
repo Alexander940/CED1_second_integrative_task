@@ -21,23 +21,37 @@ public class TrainStation {
     private TrainStation(){
     }
 
-    public void generateRandomGraph(){
-
-    }
-
     public void initializeGraph(int numberNodes){
         graph = new Graph(numberNodes);
     }
 
-    public void createGraph(final Graphics graphics){
-        graph = new Graph(50);
-
-        assignPositionsNodes(graphics);
-        assignEdges(graphics);
+    public void generateSavedGraph(final Graphics graphics){
+        initializeGraph(50);
+        assignPositionsNodesSavedGraph(graphics);
     }
 
-    private void assignEdges(Graphics graphics) {
-        for (int i = 0; i < 49; i++) {
+    private void assignPositionsNodesSavedGraph(Graphics graphics) {
+        String positions = ManageDataUtil.getPositionsGraph();
+
+        String [] separatePositions = positions.split(";");
+
+        for (int i = 0; i < separatePositions.length; i++) {
+            String [] eachPosition = separatePositions[i].split("-");
+            Pinter.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i));
+            graph.setNameNodes(i, String.valueOf(i));
+            graph.setCoordinatesX(i, Integer.parseInt(eachPosition[0]));
+            graph.setCoordinatesY(i, Integer.parseInt(eachPosition[1]));
+        }
+    }
+
+    public void generateRandomGraph(final Graphics graphics){
+        initializeGraph(50);
+        assignPositionsNodesRandomGraph(graphics);
+        assignEdgesRandomGraph(graphics);
+    }
+
+    private void assignEdgesRandomGraph(Graphics graphics) {
+        for (int i = 0; i < graph.getNumberNodes()*2; i++) {
             int weight = (int)(Math.random()*9+1);
             int node1 = (int)(Math.random()*49);
             int node2 = (int)(Math.random()*49);
@@ -54,50 +68,28 @@ public class TrainStation {
         }
     }
 
-    private void assignPositionsNodes(final Graphics graphics) {
-        String positions = ManageDataUtil.getPositionsGraph();
-
-        String [] separatePositions = positions.split(";");
-
-        for (int i = 0; i < separatePositions.length; i++) {
-            String [] eachPosition = separatePositions[i].split("-");
-            Pinter.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i));
+    private void assignPositionsNodesRandomGraph(final Graphics graphics) {
+        for (int i = 0; i < graph.getNumberNodes(); i++) {
+            int positionX = (int)(Math.random()*700+200);
+            int positionY = (int)(Math.random()*810+1);
+            Pinter.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
             graph.setNameNodes(i, String.valueOf(i));
-            graph.setCoordinatesX(i, Integer.parseInt(eachPosition[0]));
-            graph.setCoordinatesY(i, Integer.parseInt(eachPosition[1]));
+            graph.setCoordinatesX(i, positionX);
+            graph.setCoordinatesY(i, positionY);
         }
     }
 
-    public boolean dfs(int i, int f){
-        boolean [] visited = new boolean[graph.getNodes().length];
-        Stack<Node> actual = new Stack<>();
-        actual.push(graph.getNodes()[i]);
-        return dfs(i, f, visited, actual);
-    }
-
-    private boolean dfs(int a, int f, boolean [] visited, Stack<Node> actual){
-        for (int i = 0; i < visited.length; i++) {
-            if(graph.getMatrixAdjacency(a, i) == 1 && i == f){
-                return true;
-            } else if(graph.getMatrixAdjacency(a, i) == 1 && !visited[i]) {
-                actual.push(graph.getNodes()[i]);
-                visited[i] = true;
-                return dfs(i, f, visited, actual);
-            }
-        }
-        actual.pop();
-        if(actual.top() != null){
-            return dfs(graph.returnPosition(actual.top().getName()), f, visited, actual);
-        }
-        return false;
-    }
-
-    public Graph getGraph() {
-        return graph;
+    public boolean calculateDFS(Graph graph, int node1, int node2){
+        DFS dfs = new DFS(graph, node1, node2);
+        return dfs.dfs();
     }
 
     public void calculateDijkstra(final JPanel pinterGraph, int node1, int node2){
         Dijkstra dijkstra = new Dijkstra(graph, graph.getNodes().length, node1, node2, String.valueOf(node1), String.valueOf(node2));
         dijkstra.dijkstra(pinterGraph);
+    }
+
+    public Graph getGraph() {
+        return graph;
     }
 }
