@@ -14,6 +14,7 @@ public class DFS {
 
     public boolean dfs(){
         boolean [] visited = new boolean[graph.getNodes().length];
+        visited[graph.returnPosition(String.valueOf(sourceNode))] = true;
         Stack<Node> actual = new Stack<>();
         actual.push(graph.getNodes()[graph.returnPosition(String.valueOf(sourceNode))]);
         return dfs(graph.returnPosition(String.valueOf(sourceNode)), graph.returnPosition(String.valueOf(endNode)), visited, actual, graph);

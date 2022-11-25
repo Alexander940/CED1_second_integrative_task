@@ -28,6 +28,7 @@ public class TrainStation {
     public void generateSavedGraph(final Graphics graphics){
         initializeGraph(50);
         assignPositionsNodesSavedGraph(graphics);
+        assignEdgesSavedGraph(graphics);
     }
 
     private void assignPositionsNodesSavedGraph(Graphics graphics) {
@@ -37,10 +38,36 @@ public class TrainStation {
 
         for (int i = 0; i < separatePositions.length; i++) {
             String [] eachPosition = separatePositions[i].split("-");
-            Pinter.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i));
-            graph.setNameNodes(i, String.valueOf(i));
+            Pinter.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i+1));
+            graph.setNameNodes(i, String.valueOf(i+1));
             graph.setCoordinatesX(i, Integer.parseInt(eachPosition[0]));
             graph.setCoordinatesY(i, Integer.parseInt(eachPosition[1]));
+        }
+    }
+
+    private void assignEdgesSavedGraph(Graphics graphics) {
+        String read = ManageDataUtil.getEdgesGraph();
+
+        String [] adjacency = read.split(";");
+
+        for (int i = 0; i < graph.getNumberNodes(); i++) {
+            String [] eachAdjacency = adjacency[i].split("-");
+            for (int j = 0; j < graph.getNumberNodes(); j++) {
+                int weight = 0;
+
+                graph.setMatrixAdjacency(i, j, Integer.parseInt(eachAdjacency[j]));
+
+                if(graph.getMatrixAdjacency(j, i) == 1){
+                    weight = graph.getMatrixCoefficient(j, i);
+                } else {
+                    weight = (int)(Math.random()*9+1);
+                }
+
+                graph.setMatrixCoefficient(i, j, weight);
+                if(Integer.parseInt(eachAdjacency[j]) == 1){
+                    Pinter.printEdge(graphics, graph.getCoordinatesX(i), graph.getCoordinatesY(i), graph.getCoordinatesX(j), graph.getCoordinatesY(j), weight);
+                }
+            }
         }
     }
 
@@ -73,7 +100,7 @@ public class TrainStation {
             int positionX = (int)(Math.random()*700+200);
             int positionY = (int)(Math.random()*810+1);
             Pinter.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
-            graph.setNameNodes(i, String.valueOf(i));
+            graph.setNameNodes(i, String.valueOf(i+1));
             graph.setCoordinatesX(i, positionX);
             graph.setCoordinatesY(i, positionY);
         }

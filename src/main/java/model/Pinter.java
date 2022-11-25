@@ -18,7 +18,7 @@ public class Pinter {
             graphics2D.drawOval(positionX, positionY, width, height);
 
             //Text Node
-            graphics2D.setColor(Color.ORANGE);
+            graphics2D.setColor(Color.BLACK);
             Font font = new Font(null, Font.BOLD, 10);
             graphics.setFont(font);
             graphics.drawString(nameNode, positionX, positionY);
@@ -33,6 +33,7 @@ public class Pinter {
 
         BasicStroke stroke = new BasicStroke(2);
         graphics2D.setStroke(stroke);
+        graphics2D.setColor(Color.ORANGE);
         graphics2D.drawLine(initialPositionX+10, initialPositionY+10, finalPositionX+10, finalPositionY+10);
 
         if (initialPositionX <= finalPositionX) {
