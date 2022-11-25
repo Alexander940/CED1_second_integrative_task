@@ -131,11 +131,8 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelSavedGraph.setVisible(true);
-                isConnectedDFSSavedGraphButton.setVisible(true);
-                shortestRouteDijkstraSavedGraphButton.setVisible(true);
                 showGraphButton.setVisible(true);
                 backButton.setVisible(true);
-                isAllStationsRelatedButtonSavedGraph.setVisible(true);
                 panelWelcome.setVisible(false);
             }
         });
@@ -182,6 +179,9 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 TrainStation.getInstance().initializeGraph(50);
                 TrainStation.getInstance().generateSavedGraph(panelSavedGraph.getGraphics());
+                isAllStationsRelatedButtonSavedGraph.setVisible(true);
+                isConnectedDFSSavedGraphButton.setVisible(true);
+                shortestRouteDijkstraSavedGraphButton.setVisible(true);
                 showGraphButton.setVisible(false);
             }
         });
@@ -192,11 +192,8 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelRandomGraph.setVisible(true);
-                isConnectedRandomGraph_DFS.setVisible(true);
-                shortestRouteDijkstraButton.setVisible(true);
                 showGraph.setVisible(true);
                 backButton.setVisible(true);
-                isStationsRelatedDFSButtonRandomGraph.setVisible(true);
                 panelWelcome.setVisible(false);
             }
         });
@@ -206,6 +203,10 @@ public class Window {
         showGraph.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isConnectedRandomGraph_DFS.setVisible(true);
+                shortestRouteDijkstraButton.setVisible(true);
+                isStationsRelatedDFSButtonRandomGraph.setVisible(true);
+                showGraph.setVisible(false);
                 TrainStation.getInstance().generateRandomGraph(panelRandomGraph.getGraphics());
             }
         });
@@ -566,9 +567,6 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelSavedGraph2.setVisible(true);
-                isAllStationsRelatedButtonSavedGraph2.setVisible(true);
-                isStationConnectToButtonSavedGraph2.setVisible(true);
-                shortestRouteDijkstraButtonSavedGraph2.setVisible(true);
                 showGraphButtonSavedGraph2.setVisible(true);
                 backButton.setVisible(true);
                 panelWelcome.setVisible(false);
@@ -581,6 +579,9 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TrainStation.getInstance().generateSavedGraph2(panelSavedGraph2.getGraphics());
+                isAllStationsRelatedButtonSavedGraph2.setVisible(true);
+                isStationConnectToButtonSavedGraph2.setVisible(true);
+                shortestRouteDijkstraButtonSavedGraph2.setVisible(true);
                 showGraphButtonSavedGraph2.setVisible(false);
             }
         });
@@ -720,7 +721,7 @@ public class Window {
         panelSavedGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelSavedGraph, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         isConnectedDFSSavedGraphButton = new JButton();
-        isConnectedDFSSavedGraphButton.setText("Is Connected (DFS)");
+        isConnectedDFSSavedGraphButton.setText("Station To Station (DFS)");
         panelSavedGraph.add(isConnectedDFSSavedGraphButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
         panelSavedGraph.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
