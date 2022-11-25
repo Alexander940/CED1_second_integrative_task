@@ -24,7 +24,7 @@ public class DFSTest {
 
         TrainStation.getInstance().getGraph().setMatrixAdjacency(0, 2, 1);
 
-        assertEquals(true, TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(),0,2));
+        assertEquals(true, TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(),"0","2"));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class DFSTest {
 
         TrainStation.getInstance().getGraph().setMatrixAdjacency(0, 2, 1);
 
-        assertEquals(false, TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(),1,2));
+        assertEquals(false, TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(),"1","2"));
     }
 
 }

@@ -3,10 +3,10 @@ package model;
 public class DFS {
 
     private Graph graph;
-    private int sourceNode;
-    private int endNode;
+    private String sourceNode;
+    private String endNode;
 
-    public DFS(Graph graph, int sourceNode, int endNode) {
+    public DFS(Graph graph, String sourceNode, String endNode) {
         this.graph = graph;
         this.sourceNode = sourceNode;
         this.endNode = endNode;
@@ -14,10 +14,10 @@ public class DFS {
 
     public boolean dfs(){
         boolean [] visited = new boolean[graph.getNodes().length];
-        visited[graph.returnPosition(String.valueOf(sourceNode))] = true;
+        visited[graph.returnPosition(sourceNode)] = true;
         Stack<Node> actual = new Stack<>();
-        actual.push(graph.getNodes()[graph.returnPosition(String.valueOf(sourceNode))]);
-        return dfs(graph.returnPosition(String.valueOf(sourceNode)), graph.returnPosition(String.valueOf(endNode)), visited, actual, graph);
+        actual.push(graph.getNodes()[graph.returnPosition(sourceNode)]);
+        return dfs(graph.returnPosition(sourceNode), graph.returnPosition(endNode), visited, actual, graph);
     }
 
     private boolean dfs(int a, int f, boolean [] visited, Stack<Node> actual, Graph graph){

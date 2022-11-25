@@ -165,7 +165,7 @@ public class Window {
                     return;
                 }
 
-                TrainStation.getInstance().calculateDijkstra(panelRandomGraph, Integer.parseInt(firstNodeSelected.getText()), Integer.parseInt(secondNodeSelected.getText()));
+                TrainStation.getInstance().calculateDijkstra(panelRandomGraph, firstNodeSelected.getText(), secondNodeSelected.getText());
             }
         });
     }
@@ -191,7 +191,7 @@ public class Window {
                     return;
                 }
 
-                TrainStation.getInstance().calculateDijkstra(panelSavedGraph, Integer.parseInt(firstNodeSelected.getText()), Integer.parseInt(secondNodeSelected.getText()));
+                TrainStation.getInstance().calculateDijkstra(panelSavedGraph, firstNodeSelected.getText(), secondNodeSelected.getText());
             }
         });
     }
@@ -217,7 +217,7 @@ public class Window {
                     return;
                 }
 
-                if (TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(), Integer.parseInt(firstNodeSelected.getText()), Integer.parseInt(secondNodeSelected.getText()))) {
+                if (TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(), firstNodeSelected.getText(), secondNodeSelected.getText())) {
                     JOptionPane.showMessageDialog(null, "It's connected");
                 } else {
                     JOptionPane.showMessageDialog(null, "It isn't connected");
@@ -247,7 +247,7 @@ public class Window {
                     return;
                 }
 
-                if (TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(), Integer.parseInt(firstNodeSelected.getText()), Integer.parseInt(secondNodeSelected.getText()))) {
+                if (TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(), firstNodeSelected.getText(), secondNodeSelected.getText())) {
                     JOptionPane.showMessageDialog(null, "It's connected");
                 } else {
                     JOptionPane.showMessageDialog(null, "It isn't connected");
@@ -277,7 +277,7 @@ public class Window {
                     return;
                 }
 
-                DFS dfs = new DFS(graph, Integer.parseInt(firstNodeSelected.getText()), Integer.parseInt(secondNodeSelected.getText()));
+                DFS dfs = new DFS(graph, firstNodeSelected.getText(), secondNodeSelected.getText());
 
                 if (dfs.dfs()) {
                     JOptionPane.showMessageDialog(null, "It's connected");
@@ -370,10 +370,6 @@ public class Window {
 
                     graph.setCoordinatesX(position, positionX);
                     graph.setCoordinatesY(position, positionY);
-                    System.out.print(positionX);
-                    System.out.print("-");
-                    System.out.print(positionY);
-                    System.out.print(";");
                     graph.setNameNodes(position, nameNode);
                     Pinter.printNodeInGraph(panelGraphManual.getGraphics(), positionX, positionY, nameNode);
                     position++;

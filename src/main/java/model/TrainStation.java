@@ -100,19 +100,19 @@ public class TrainStation {
             int positionX = (int)(Math.random()*700+200);
             int positionY = (int)(Math.random()*810+1);
             Pinter.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
-            graph.setNameNodes(i, String.valueOf(i+1));
+            graph.setNameNodes(i, String.valueOf(i));
             graph.setCoordinatesX(i, positionX);
             graph.setCoordinatesY(i, positionY);
         }
     }
 
-    public boolean calculateDFS(Graph graph, int node1, int node2){
+    public boolean calculateDFS(Graph graph, String node1, String node2){
         DFS dfs = new DFS(graph, node1, node2);
         return dfs.dfs();
     }
 
-    public void calculateDijkstra(final JPanel pinterGraph, int node1, int node2){
-        Dijkstra dijkstra = new Dijkstra(graph, graph.getNodes().length, node1, node2, String.valueOf(node1), String.valueOf(node2));
+    public void calculateDijkstra(final JPanel pinterGraph, String node1, String node2){
+        Dijkstra dijkstra = new Dijkstra(graph, graph.getNodes().length, graph.returnPosition(node1), graph.returnPosition(node2), node1, node2);
         dijkstra.dijkstra(pinterGraph);
     }
 
