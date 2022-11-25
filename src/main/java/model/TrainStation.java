@@ -95,10 +95,14 @@ public class TrainStation {
         }
     }
 
+    public void resetGraph(){
+        graph = null;
+    }
+
     private void assignPositionsNodesRandomGraph(final Graphics graphics) {
         for (int i = 0; i < graph.getNumberNodes(); i++) {
             int positionX = (int)(Math.random()*700+200);
-            int positionY = (int)(Math.random()*810+1);
+            int positionY = (int)(Math.random()*790+1);
             Pinter.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
             graph.setNameNodes(i, String.valueOf(i));
             graph.setCoordinatesX(i, positionX);
