@@ -25,16 +25,20 @@ public class TrainStation {
         graph = new Graph(numberNodes);
     }
 
-    public void generateSavedGraph(final Graphics graphics){
+    public void generateSavedGraph2(final Graphics graphics){
         initializeGraph(50);
-        assignPositionsNodesSavedGraph(graphics);
-        assignEdgesSavedGraph(graphics);
+        assignPositionsNodesSavedGraph(graphics, ManageDataUtil.getPositionsGraphRelated());
+        assignEdgesSavedGraph(graphics, ManageDataUtil.getEdgesGraphRelated());
     }
 
-    private void assignPositionsNodesSavedGraph(Graphics graphics) {
-        String positions = ManageDataUtil.getPositionsGraph();
+    public void generateSavedGraph(final Graphics graphics){
+        initializeGraph(50);
+        assignPositionsNodesSavedGraph(graphics, ManageDataUtil.getPositionsGraph());
+        assignEdgesSavedGraph(graphics, ManageDataUtil.getEdgesGraph());
+    }
 
-        String [] separatePositions = positions.split(";");
+    private void assignPositionsNodesSavedGraph(Graphics graphics, String data) {
+        String [] separatePositions = data.split(";");
 
         for (int i = 0; i < separatePositions.length; i++) {
             String [] eachPosition = separatePositions[i].split("-");
@@ -45,10 +49,8 @@ public class TrainStation {
         }
     }
 
-    private void assignEdgesSavedGraph(Graphics graphics) {
-        String read = ManageDataUtil.getEdgesGraph();
-
-        String [] adjacency = read.split(";");
+    private void assignEdgesSavedGraph(Graphics graphics, String data) {
+        String [] adjacency = data.split(";");
 
         for (int i = 0; i < graph.getNumberNodes(); i++) {
             String [] eachAdjacency = adjacency[i].split("-");
@@ -112,12 +114,23 @@ public class TrainStation {
 
     public boolean calculateDFS(Graph graph, String node1, String node2){
         DFS dfs = new DFS(graph, node1, node2);
-        return dfs.dfs();
+        return dfs.dfsNodeToNode();
+    }
+
+    public boolean calculateDFSRelated(Graph graph){
+        DFS dfs = new DFS(graph);
+        return dfs.dfsAllRelated();
     }
 
     public void calculateDijkstra(final JPanel pinterGraph, String node1, String node2){
         Dijkstra dijkstra = new Dijkstra(graph, graph.getNodes().length, graph.returnPosition(node1), graph.returnPosition(node2), node1, node2);
         dijkstra.dijkstra(pinterGraph);
+    }
+
+    public int calculateWeight(int positionXNode1, int positionYNode1, int positionXNode2, int positionYNode2){
+        int sizeX = Math.abs(positionXNode1-positionXNode2);
+        int sizeY = Math.abs(positionYNode1-positionYNode2);
+        return (int)(Math.sqrt((Math.pow(sizeX, 2) + Math.pow(sizeY, 2))));
     }
 
     public Graph getGraph() {

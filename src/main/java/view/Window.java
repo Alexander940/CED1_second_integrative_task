@@ -41,6 +41,15 @@ public class Window {
     private JPanel panelSavedGraph;
     private JButton showGraphButton;
     private JButton backButton;
+    private JButton savedGraph2Button;
+    private JPanel panelSavedGraph2;
+    private JButton isAllStationsRelatedButtonSavedGraph2;
+    private JButton isStationConnectToButtonSavedGraph2;
+    private JButton shortestRouteDijkstraButtonSavedGraph2;
+    private JButton showGraphButtonSavedGraph2;
+    private JButton isAllStationsRelatedButtonSavedGraph;
+    private JButton isStationsRelatedDFSButtonRandomGraph;
+    private JButton isStationsRelatedDFSButtonManualGraph;
 
     private Graph graph;
 
@@ -62,6 +71,14 @@ public class Window {
         shortestRouteDijkstraSavedGraphButton.setVisible(false);
         showGraphButton.setVisible(false);
         backButton.setVisible(false);
+        panelSavedGraph2.setVisible(false);
+        isAllStationsRelatedButtonSavedGraph2.setVisible(false);
+        isStationConnectToButtonSavedGraph2.setVisible(false);
+        shortestRouteDijkstraButtonSavedGraph2.setVisible(false);
+        showGraphButtonSavedGraph2.setVisible(false);
+        isAllStationsRelatedButtonSavedGraph.setVisible(false);
+        isStationsRelatedDFSButtonRandomGraph.setVisible(false);
+        isStationsRelatedDFSButtonManualGraph.setVisible(false);
 
 
         this.handleEventButtonManualGraph();
@@ -77,8 +94,16 @@ public class Window {
         this.handleEventButtonCalculateDFSManualGraph();
         this.handleEventButtonShowSavedGraph();
         this.handleEventButtonCalculateDijkstraSavedGraph();
+        this.handleEventButtonCalculateDijkstraSavedGraph2();
         this.handleEventButtonCalculateDFSSavedGraph();
         this.handleEventButtonBack();
+        this.handleEventOpenSavedGraph2();
+        this.handleEventShowSavedGraph2();
+        this.handleEventButtonCalculateDFSRelatedRandomGraph();
+        this.handleEventButtonCalculateDFSSavedGraph2();
+        this.handleEventButtonCalculateDFSRelatedSavedGraph2();
+        this.handleEventButtonCalculateDFSRelatedSavedGraph();
+        this.handleEventButtonCalculateDFSRelatedManualGraph();
     }
 
     public static void main(String[] args) {
@@ -110,6 +135,7 @@ public class Window {
                 shortestRouteDijkstraSavedGraphButton.setVisible(true);
                 showGraphButton.setVisible(true);
                 backButton.setVisible(true);
+                isAllStationsRelatedButtonSavedGraph.setVisible(true);
                 panelWelcome.setVisible(false);
             }
         });
@@ -134,6 +160,14 @@ public class Window {
                 shortestRouteDijkstraSavedGraphButton.setVisible(false);
                 showGraphButton.setVisible(false);
                 backButton.setVisible(false);
+                panelSavedGraph2.setVisible(false);
+                isAllStationsRelatedButtonSavedGraph2.setVisible(false);
+                isStationConnectToButtonSavedGraph2.setVisible(false);
+                shortestRouteDijkstraButtonSavedGraph2.setVisible(false);
+                showGraphButtonSavedGraph2.setVisible(false);
+                isStationsRelatedDFSButtonManualGraph.setVisible(false);
+                isAllStationsRelatedButtonSavedGraph.setVisible(false);
+                isStationsRelatedDFSButtonRandomGraph.setVisible(false);
                 TrainStation.getInstance().resetGraph();
                 graph = null;
                 counterTemp = 0;
@@ -162,6 +196,7 @@ public class Window {
                 shortestRouteDijkstraButton.setVisible(true);
                 showGraph.setVisible(true);
                 backButton.setVisible(true);
+                isStationsRelatedDFSButtonRandomGraph.setVisible(true);
                 panelWelcome.setVisible(false);
             }
         });
@@ -228,6 +263,32 @@ public class Window {
         });
     }
 
+    private void handleEventButtonCalculateDijkstraSavedGraph2() {
+        shortestRouteDijkstraButtonSavedGraph2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField firstNodeSelected = new JTextField();
+                JTextField secondNodeSelected = new JTextField();
+
+                Object[] fields = {
+                        "initial node ", firstNodeSelected,
+                        "final node", secondNodeSelected
+                };
+
+                int option = JOptionPane.showConfirmDialog(null, fields, "Enter adjacency weight between node", JOptionPane.OK_CANCEL_OPTION);
+
+                if (option == JOptionPane.CANCEL_OPTION) return;
+
+                if (!TrainStation.getInstance().getGraph().checkIfNameAlreadyExist(firstNodeSelected.getText()) || !TrainStation.getInstance().getGraph().checkIfNameAlreadyExist(secondNodeSelected.getText())) {
+                    JOptionPane.showMessageDialog(null, "Node that you entered it is invalid or doesn't exist");
+                    return;
+                }
+
+                TrainStation.getInstance().calculateDijkstra(panelSavedGraph2, firstNodeSelected.getText(), secondNodeSelected.getText());
+            }
+        });
+    }
+
     private void handleEventButtonCalculateDFSRandomGraph() {
         isConnectedRandomGraph_DFS.addActionListener(new ActionListener() {
             @Override
@@ -288,6 +349,89 @@ public class Window {
         });
     }
 
+    private void handleEventButtonCalculateDFSSavedGraph2() {
+        isStationConnectToButtonSavedGraph2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField firstNodeSelected = new JTextField();
+                JTextField secondNodeSelected = new JTextField();
+
+                Object[] fields = {
+                        "initial node ", firstNodeSelected,
+                        "final node", secondNodeSelected
+                };
+
+                int option = JOptionPane.showConfirmDialog(null, fields, "Enter adjacency weight between node", JOptionPane.OK_CANCEL_OPTION);
+
+                if (option == JOptionPane.CANCEL_OPTION) return;
+
+                if (!TrainStation.getInstance().getGraph().checkIfNameAlreadyExist(firstNodeSelected.getText()) || !TrainStation.getInstance().getGraph().checkIfNameAlreadyExist(secondNodeSelected.getText())) {
+                    JOptionPane.showMessageDialog(null, "Node that you entered it is invalid or doesn't exist");
+                    return;
+                }
+
+                if (TrainStation.getInstance().calculateDFS(TrainStation.getInstance().getGraph(), firstNodeSelected.getText(), secondNodeSelected.getText())) {
+                    JOptionPane.showMessageDialog(null, "It's connected");
+                } else {
+                    JOptionPane.showMessageDialog(null, "It isn't connected");
+                }
+            }
+        });
+    }
+
+    private void handleEventButtonCalculateDFSRelatedSavedGraph2() {
+        isAllStationsRelatedButtonSavedGraph2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (TrainStation.getInstance().calculateDFSRelated(TrainStation.getInstance().getGraph())) {
+                    JOptionPane.showMessageDialog(null, "It's related");
+                } else {
+                    JOptionPane.showMessageDialog(null, "It isn't related");
+                }
+            }
+        });
+    }
+
+    private void handleEventButtonCalculateDFSRelatedSavedGraph() {
+        isAllStationsRelatedButtonSavedGraph.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (TrainStation.getInstance().calculateDFSRelated(TrainStation.getInstance().getGraph())) {
+                    JOptionPane.showMessageDialog(null, "It's related");
+                } else {
+                    JOptionPane.showMessageDialog(null, "It isn't related");
+                }
+            }
+        });
+    }
+
+    private void handleEventButtonCalculateDFSRelatedRandomGraph() {
+        isStationsRelatedDFSButtonRandomGraph.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (TrainStation.getInstance().calculateDFSRelated(TrainStation.getInstance().getGraph())) {
+                    JOptionPane.showMessageDialog(null, "It's related");
+                } else {
+                    JOptionPane.showMessageDialog(null, "It isn't related");
+                }
+            }
+        });
+    }
+
+    private void handleEventButtonCalculateDFSRelatedManualGraph() {
+        isStationsRelatedDFSButtonManualGraph.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DFS dfs = new DFS(graph);
+                if (dfs.dfsAllRelated()) {
+                    JOptionPane.showMessageDialog(null, "It's related");
+                } else {
+                    JOptionPane.showMessageDialog(null, "It isn't related");
+                }
+            }
+        });
+    }
+
     private void handleEventButtonCalculateDFSManualGraph() {
         isConnectedDFSManualGraphButton.addActionListener(new ActionListener() {
             @Override
@@ -311,7 +455,7 @@ public class Window {
 
                 DFS dfs = new DFS(graph, firstNodeSelected.getText(), secondNodeSelected.getText());
 
-                if (dfs.dfs()) {
+                if (dfs.dfsNodeToNode()) {
                     JOptionPane.showMessageDialog(null, "It's connected");
                 } else {
                     JOptionPane.showMessageDialog(null, "It isn't connected");
@@ -338,6 +482,7 @@ public class Window {
                 routes.setVisible(true);
                 dijkstra.setVisible(true);
                 isConnectedDFSManualGraphButton.setVisible(true);
+                isStationsRelatedDFSButtonManualGraph.setVisible(true);
                 backButton.setVisible(true);
             }
         });
@@ -403,11 +548,40 @@ public class Window {
 
                     graph.setCoordinatesX(position, positionX);
                     graph.setCoordinatesY(position, positionY);
+                    System.out.print(positionX);
+                    System.out.print("-");
+                    System.out.print(positionY);
+                    System.out.print(";");
                     graph.setNameNodes(position, nameNode);
                     Pinter.printNodeInGraph(panelGraphManual.getGraphics(), positionX, positionY, nameNode);
                     position++;
                 }
 
+            }
+        });
+    }
+
+    private void handleEventOpenSavedGraph2() {
+        savedGraph2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSavedGraph2.setVisible(true);
+                isAllStationsRelatedButtonSavedGraph2.setVisible(true);
+                isStationConnectToButtonSavedGraph2.setVisible(true);
+                shortestRouteDijkstraButtonSavedGraph2.setVisible(true);
+                showGraphButtonSavedGraph2.setVisible(true);
+                backButton.setVisible(true);
+                panelWelcome.setVisible(false);
+            }
+        });
+    }
+
+    private void handleEventShowSavedGraph2() {
+        showGraphButtonSavedGraph2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TrainStation.getInstance().generateSavedGraph2(panelSavedGraph2.getGraphics());
+                showGraphButtonSavedGraph2.setVisible(false);
             }
         });
     }
@@ -473,7 +647,7 @@ public class Window {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(6, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
         panelInformation = new JPanel();
         panelInformation.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelInformation, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -492,7 +666,7 @@ public class Window {
         panelGraphManual.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelGraphManual, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         dijkstra = new JButton();
-        dijkstra.setText("Calculate Dijkstra");
+        dijkstra.setText("Shortest Route (Dijkstra)");
         panelGraphManual.add(dijkstra, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         panelGraphManual.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 4, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -500,17 +674,20 @@ public class Window {
         routes.setText("Create Routes");
         panelGraphManual.add(routes, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         isConnectedDFSManualGraphButton = new JButton();
-        isConnectedDFSManualGraphButton.setText("Is Connected (DFS)");
+        isConnectedDFSManualGraphButton.setText("Station To Station (DFS)");
         panelGraphManual.add(isConnectedDFSManualGraphButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        isStationsRelatedDFSButtonManualGraph = new JButton();
+        isStationsRelatedDFSButtonManualGraph.setText("Is Stations Related? (DFS)");
+        panelGraphManual.add(isStationsRelatedDFSButtonManualGraph, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelWelcome = new JPanel();
-        panelWelcome.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panelWelcome.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelWelcome, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         graph_1 = new JButton();
         graph_1.setText("Random Graph");
         panelWelcome.add(graph_1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         manualGraph = new JButton();
         manualGraph.setText("Manual Graph");
-        panelWelcome.add(manualGraph, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelWelcome.add(manualGraph, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         savedGraphButton = new JButton();
         savedGraphButton.setText("Saved Graph");
         panelWelcome.add(savedGraphButton, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -518,23 +695,29 @@ public class Window {
         Font titleFont = this.$$$getFont$$$("Arial Black", Font.BOLD, 26, title.getFont());
         if (titleFont != null) title.setFont(titleFont);
         title.setText("!Welcome to the train station¡");
-        panelWelcome.add(title, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelWelcome.add(title, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        savedGraph2Button = new JButton();
+        savedGraph2Button.setText("Saved Graph 2");
+        panelWelcome.add(savedGraph2Button, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelRandomGraph = new JPanel();
-        panelRandomGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panelRandomGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelRandomGraph, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         isConnectedRandomGraph_DFS = new JButton();
-        isConnectedRandomGraph_DFS.setText("Is connected (DFS)");
-        panelRandomGraph.add(isConnectedRandomGraph_DFS, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        isConnectedRandomGraph_DFS.setText("Station To Station (DFS)");
+        panelRandomGraph.add(isConnectedRandomGraph_DFS, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        panelRandomGraph.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panelRandomGraph.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         shortestRouteDijkstraButton = new JButton();
         shortestRouteDijkstraButton.setText("Shortest route (Dijkstra)");
-        panelRandomGraph.add(shortestRouteDijkstraButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelRandomGraph.add(shortestRouteDijkstraButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         showGraph = new JButton();
         showGraph.setText("Show graph");
-        panelRandomGraph.add(showGraph, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelRandomGraph.add(showGraph, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        isStationsRelatedDFSButtonRandomGraph = new JButton();
+        isStationsRelatedDFSButtonRandomGraph.setText("Is Stations Related? (DFS)");
+        panelRandomGraph.add(isStationsRelatedDFSButtonRandomGraph, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelSavedGraph = new JPanel();
-        panelSavedGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panelSavedGraph.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelSavedGraph, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         isConnectedDFSSavedGraphButton = new JButton();
         isConnectedDFSSavedGraphButton.setText("Is Connected (DFS)");
@@ -547,9 +730,29 @@ public class Window {
         showGraphButton = new JButton();
         showGraphButton.setText("Show Graph");
         panelSavedGraph.add(showGraphButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        isAllStationsRelatedButtonSavedGraph = new JButton();
+        isAllStationsRelatedButtonSavedGraph.setText("Is Stations Related? (DFS)");
+        panelSavedGraph.add(isAllStationsRelatedButtonSavedGraph, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         backButton = new JButton();
         backButton.setText("Back");
         panel1.add(backButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panelSavedGraph2 = new JPanel();
+        panelSavedGraph2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panelSavedGraph2, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        isAllStationsRelatedButtonSavedGraph2 = new JButton();
+        isAllStationsRelatedButtonSavedGraph2.setText("Is Stations Related? (DFS)");
+        panelSavedGraph2.add(isAllStationsRelatedButtonSavedGraph2, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer4 = new com.intellij.uiDesigner.core.Spacer();
+        panelSavedGraph2.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        isStationConnectToButtonSavedGraph2 = new JButton();
+        isStationConnectToButtonSavedGraph2.setText("Station To Station (DFS)");
+        panelSavedGraph2.add(isStationConnectToButtonSavedGraph2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        shortestRouteDijkstraButtonSavedGraph2 = new JButton();
+        shortestRouteDijkstraButtonSavedGraph2.setText("Shortest Route (Dijkstra)");
+        panelSavedGraph2.add(shortestRouteDijkstraButtonSavedGraph2, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        showGraphButtonSavedGraph2 = new JButton();
+        showGraphButtonSavedGraph2.setText("Show Graph");
+        panelSavedGraph2.add(showGraphButtonSavedGraph2, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
