@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Dijkstra {
-
     private Graph graph;
     private Node auxNode = null;
     private int auxAccumulated;
