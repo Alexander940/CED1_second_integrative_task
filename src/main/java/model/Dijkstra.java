@@ -58,6 +58,7 @@ public class Dijkstra {
             this.drawTheShortestPath(pinterGraph);
             return nodes[positionEndNode];
         }
+        return nodes[positionEndNode];
     }
 
     private void findNextNodePermanent() {
