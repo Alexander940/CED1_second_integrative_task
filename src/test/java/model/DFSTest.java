@@ -141,7 +141,7 @@ public class DFSTest {
     }
 
     @Test
-    public void when_there_is_a_node_without_with_others_1() {
+    public void when_there_is_a_node_without_related_with_others_1() {
         fillGraph1();
         dfs = new DFS(graph, "20", "35");
 
@@ -149,7 +149,7 @@ public class DFSTest {
     }
 
     @Test
-    public void when_there_is_a_node_without_with_others_2() {
+    public void when_there_is_a_node_without_related_with_others_2() {
         fillGraph1();
         dfs = new DFS(graph, "41", "35");
 
@@ -157,7 +157,7 @@ public class DFSTest {
     }
 
     @Test
-    public void when_there_is_a_node_without_with_others_3() {
+    public void when_there_is_a_node_without_related_with_others_3() {
         fillGraph1();
         dfs = new DFS(graph, "44", "35");
 
@@ -165,7 +165,7 @@ public class DFSTest {
     }
 
     @Test
-    public void when_the_all_graph_is_related() {
+    public void when_all_graph_is_related() {
         fillGraph2();
         dfs = new DFS(graph);
 
@@ -173,7 +173,7 @@ public class DFSTest {
     }
 
     @Test
-    public void when_the_all_graph_is_not_related() {
+    public void when_all_graph_is_not_related() {
         fillGraph1();
         dfs = new DFS(graph);
 

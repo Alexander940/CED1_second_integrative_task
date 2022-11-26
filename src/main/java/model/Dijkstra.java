@@ -1,5 +1,7 @@
 package model;
 
+import util.PinterUtil;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -55,7 +57,9 @@ public class Dijkstra {
                 auxNumberMaxNodes++;
             } while (auxNumberMaxNodes < numberMaxNodes + 1);
 
-            this.drawTheShortestPath(pinterGraph);
+            if(pinterGraph != null){
+                this.drawTheShortestPath(pinterGraph);
+            }
             return nodes[positionEndNode];
         }
         return nodes[positionEndNode];
@@ -79,7 +83,7 @@ public class Dijkstra {
         }
 
         while (auxNode.getPredecessor() != null) {
-            Pinter.highlightLine(pinterGraph.getGraphics(), graph.getCoordinatesX(graph.returnPosition(auxNode.getName())), graph.getCoordinatesY(graph.returnPosition(auxNode.getName())),
+            PinterUtil.highlightLine(pinterGraph.getGraphics(), graph.getCoordinatesX(graph.returnPosition(auxNode.getName())), graph.getCoordinatesY(graph.returnPosition(auxNode.getName())),
                     graph.getCoordinatesX(graph.returnPosition(auxNode.getPredecessor().getName())), graph.getCoordinatesY(graph.returnPosition(auxNode.getPredecessor().getName())), Color.GREEN);
             auxNode = auxNode.getPredecessor();
         }

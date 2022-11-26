@@ -1,6 +1,7 @@
 package model;
 
 import util.ManageDataUtil;
+import util.PinterUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +43,7 @@ public class TrainStation {
 
         for (int i = 0; i < separatePositions.length; i++) {
             String [] eachPosition = separatePositions[i].split("-");
-            Pinter.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i+1));
+            PinterUtil.printNodeInGraph(graphics, Integer.parseInt(eachPosition[0]), Integer.parseInt(eachPosition[1]), String.valueOf(i+1));
             graph.setNameNodes(i, String.valueOf(i+1));
             graph.setCoordinatesX(i, Integer.parseInt(eachPosition[0]));
             graph.setCoordinatesY(i, Integer.parseInt(eachPosition[1]));
@@ -67,7 +68,7 @@ public class TrainStation {
 
                 graph.setMatrixCoefficient(i, j, weight);
                 if(Integer.parseInt(eachAdjacency[j]) == 1){
-                    Pinter.printEdge(graphics, graph.getCoordinatesX(i), graph.getCoordinatesY(i), graph.getCoordinatesX(j), graph.getCoordinatesY(j), weight);
+                    PinterUtil.printEdge(graphics, graph.getCoordinatesX(i), graph.getCoordinatesY(i), graph.getCoordinatesX(j), graph.getCoordinatesY(j), weight);
                 }
             }
         }
@@ -92,7 +93,7 @@ public class TrainStation {
             } else {
                 graph.setMatrixAdjacency(node1, node2, 1);
                 graph.setMatrixCoefficient(node1, node2, weight);
-                Pinter.printEdge(graphics, graph.getCoordinatesX(node1), graph.getCoordinatesY(node1), graph.getCoordinatesX(node2), graph.getCoordinatesY(node2), weight);
+                PinterUtil.printEdge(graphics, graph.getCoordinatesX(node1), graph.getCoordinatesY(node1), graph.getCoordinatesX(node2), graph.getCoordinatesY(node2), weight);
             }
         }
     }
@@ -105,7 +106,7 @@ public class TrainStation {
         for (int i = 0; i < graph.getNumberNodes(); i++) {
             int positionX = (int)(Math.random()*700+200);
             int positionY = (int)(Math.random()*790+1);
-            Pinter.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
+            PinterUtil.printNodeInGraph(graphics, positionX, positionY, String.valueOf(i));
             graph.setNameNodes(i, String.valueOf(i));
             graph.setCoordinatesX(i, positionX);
             graph.setCoordinatesY(i, positionY);

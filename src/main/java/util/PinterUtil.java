@@ -1,8 +1,8 @@
-package model;
+package util;
 
 import java.awt.*;
 
-public class Pinter {
+public class PinterUtil {
 
     public static void printNodeInGraph(final Graphics graphics, final int positionX, final int positionY, final String nameNode) {
 

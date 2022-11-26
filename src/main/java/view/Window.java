@@ -1,6 +1,7 @@
 package view;
 
 import model.*;
+import util.PinterUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -554,7 +555,7 @@ public class Window {
                     System.out.print(positionY);
                     System.out.print(";");
                     graph.setNameNodes(position, nameNode);
-                    Pinter.printNodeInGraph(panelGraphManual.getGraphics(), positionX, positionY, nameNode);
+                    PinterUtil.printNodeInGraph(panelGraphManual.getGraphics(), positionX, positionY, nameNode);
                     position++;
                 }
 
@@ -635,7 +636,7 @@ public class Window {
         int weight = Integer.parseInt(weightAdjacency.getText());
         graph.setMatrixCoefficient(positionNode1, positionNode2, weight);
         graph.setMatrixAdjacency(positionNode1, positionNode2, 1);
-        Pinter.printEdge(pinterGraph.getGraphics(), graph.getCoordinatesX(positionNode1), graph.getCoordinatesY(positionNode1), graph.getCoordinatesX(positionNode2), graph.getCoordinatesY(positionNode2), weight);
+        PinterUtil.printEdge(pinterGraph.getGraphics(), graph.getCoordinatesX(positionNode1), graph.getCoordinatesY(positionNode1), graph.getCoordinatesX(positionNode2), graph.getCoordinatesY(positionNode2), weight);
     }
 
 
