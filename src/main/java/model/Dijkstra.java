@@ -27,7 +27,7 @@ public class Dijkstra {
         this.nameEndNode = nameEndNode;
     }
 
-    public void dijkstra(final JPanel pinterGraph) {
+    public Node dijkstra(final JPanel pinterGraph) {
         for(int i = 0; i < numberMaxNodes; i++) nodes[i] = new Node();
 
         if(positionPermanentNode != positionEndNode) {
@@ -56,6 +56,7 @@ public class Dijkstra {
             } while (auxNumberMaxNodes < numberMaxNodes + 1);
 
             this.drawTheShortestPath(pinterGraph);
+            return nodes[positionEndNode];
         }
     }
 
